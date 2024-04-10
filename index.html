@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="container">
+        <h1>Weather Dashboard</h1>
+      </nav>
+    </header>
+    <main>
+      <div class="container">
+        <aside>
+          <div class="form">
+            <h2>Search a City:</h2>
+            <form method="POST">
+              <input
+                type="text"
+                name="search"
+                id="search"
+                placeholder="Minneapolis"
+              />
+              <div class="btn-box">
+                <button type="submit" id="submit-btn">Search</button>
+              </div>
+            </form>
+          </div>
+          <hr />
+          <div class="previous-results"></div>
+        </aside>
+        <section>
+          <div class="current-day"></div>
+          <div class="five-day">
+            <h3>Five Day Forecast</h3>
+            <div class="five-day-grid"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="./assets/js/script.js"></script>
+  </body>
+</html>
