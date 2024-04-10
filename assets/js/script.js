@@ -12,6 +12,8 @@ const cityWeatherData = JSON.parse(localStorage.getItem("cityWeather"));
 function handleSearch(city) {
   const coordinateUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
 
+  // fetch the url to get the coordniates and then with those coordninates
+  // fetch the url for the cities weather data
   fetch(coordinateUrl)
     .then(function (response) {
       if (!response.ok) {
@@ -20,6 +22,7 @@ function handleSearch(city) {
       return response.json();
     })
     .then(function (data) {
+      // create object of coordinates
       const coordinates = {
         lat: data[0].lat,
         lon: data[0].lon,
@@ -35,14 +38,17 @@ function handleSearch(city) {
     })
     .then(function (weatherData) {
       if (weatherData) {
+        // create object of teh weather data
         const cityWeatherData = {
           city: city,
           currentDay: weatherData.list[0],
-          fiveDay: weatherData.list.slice(1, 6), // Get the next five days
         };
+        // set the weather data to local storage
         localStorage.setItem("cityWeather", JSON.stringify(cityWeatherData));
+        // set the last searched city to local storage
         localStorage.setItem("lastSearchedCity", city);
 
+        // display the information
         displayCurrentDay(weatherData);
         displayFiveDay(weatherData);
         addToSearchHistory(city);
@@ -52,11 +58,14 @@ function handleSearch(city) {
 
 // function to display the current days weather
 function displayCurrentDay(weatherData) {
+  // check to see if there is any weather data
   if (weatherData && weatherData.list && weatherData.list.length > 0) {
+    // handle all of the conversions
     const currentWeather = weatherData.list[0];
     const fahrenheit = ((weatherData.list[0].main.temp - 273.15) * 9) / 5 + 32;
     const date = new Date(weatherData.list[0].dt * 1000);
 
+    // display the current day weather data
     currentDayDiv.innerHTML = `
                 <h2>${weatherData.city.name} ${date.toLocaleDateString(
       "en-US"
@@ -83,6 +92,7 @@ function displayCurrentDay(weatherData) {
 function displayFiveDay(weatherData) {
   fiveDayDiv.innerHTML = "";
 
+  // create an object to see if that day has already been rendered
   const renderedDays = {};
 
   // Loop through each item in the weather data
@@ -113,12 +123,13 @@ function displayFiveDay(weatherData) {
             </div>
         `;
 
+      // add the days html to the five day grid
       fiveDayDiv.innerHTML += dayHtml;
     }
   }
 }
 
-// function the add city to the search history
+// function to add city to the search history
 function addToSearchHistory(city) {
   // Check if the city is already in the search history
   if (!searchHistory.includes(city)) {
@@ -130,6 +141,7 @@ function addToSearchHistory(city) {
   renderSearchHistory(searchHistory);
 }
 
+// function to render the search history
 function renderSearchHistory(searchHistory) {
   // Clear previous search history
   previousSearchDiv.innerHTML = "";
@@ -147,15 +159,18 @@ function renderSearchHistory(searchHistory) {
   });
 }
 
+// listen for when they search a city
 searchBtn.addEventListener("click", (e) => {
   e.preventDefault();
   const city = inputEl.value.trim();
 
   if (city) {
     handleSearch(city);
+    inputEl.value = "";
   }
 });
 
+// loads the saved data when teh page is loaded
 document.addEventListener("DOMContentLoaded", function () {
   const lastSearchedCity = localStorage.getItem("lastSearchedCity");
   if (lastSearchedCity) {
